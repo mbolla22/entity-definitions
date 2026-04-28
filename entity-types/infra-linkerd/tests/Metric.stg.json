@@ -1,0 +1,182 @@
+[
+  {
+    "eventType": "Metric",
+    "metricName": "linkerd_tcp_connection_duration_total",
+    "account": 999888,
+    "timestamp": 1713786900000,
+    "value": 3287.12,
+    "otel.library.name": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver",
+    "instrumentation.provider": "opentelemetry",
+    "telemetry.sdk.name": "opentelemetry",
+    "telemetry.sdk.version": "1.20.0",
+    "telemetry.sdk.language": "go",
+    
+    "linkerd.proxy.name": "linkerd2-proxy",
+    "linkerd.proxy.version": "edge-23.5.1",
+    "linkerd.version": "edge-23.5.1",
+    
+    "k8s.cluster.name": "staging-cluster",
+    "k8s.namespace.name": "linkerd-staging",
+    "k8s.deployment.name": "linkerd-proxy-dev",
+    "k8s.pod.name": "test-app-6d7f89b4c-z8m3k",
+    "k8s.node.name": "ip-10-0-1-234.us-east-1.compute.internal",
+    "k8s.service.name": "linkerd-proxy-injector",
+    "k8s.container.name": "linkerd-proxy",
+    
+    "service.name": "test-app",
+    "service.namespace": "default",
+    "service.version": "v0.1.0-dev",
+    
+    "host.name": "ip-10-0-1-234.us-east-1.compute.internal",
+    "host.address": "10.0.1.234",
+    
+    "cloud.provider": "aws",
+    "cloud.platform": "aws_eks",
+    "cloud.account.id": "999888777666",
+    "cloud.region": "us-east-1",
+    "cloud.availability_zone": "us-east-1a",
+    "aws.region": "us-east-1",
+    
+    "newrelic.integrationName": "linkerd",
+    "newrelic.integrationVersion": "1.0.0-beta",
+    
+    "label.version": "edge-23.5.1",
+    "label.tier": "control-plane",
+    "label.environment": "staging",
+    "k8s.label.app": "linkerd-proxy",
+    "k8s.label.linkerd.io/proxy-deployment": "test-app",
+    "k8s.annotation.linkerd.io/created-by": "linkerd/cli edge-23.5.1"
+  },
+  {
+    "eventType": "Metric",
+    "metricName": "linkerd_request_total",
+    "account": 999888,
+    "timestamp": 1713786900000,
+    "value": 67,
+    "otel.library.name": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver",
+    "instrumentation.provider": "opentelemetry",
+    "telemetry.sdk.name": "opentelemetry",
+    "telemetry.sdk.version": "1.20.0",
+    
+    "linkerd.proxy.name": "linkerd2-proxy",
+    "linkerd.proxy.version": "edge-23.5.1",
+    "linkerd.version": "edge-23.5.1",
+    
+    "k8s.cluster.name": "staging-cluster", 
+    "k8s.namespace.name": "test-apps",
+    "k8s.deployment.name": "api-gateway",
+    "k8s.pod.name": "api-gateway-5f8d9c7b6-n2m8p",
+    "k8s.node.name": "ip-10-0-2-156.us-east-1.compute.internal",
+    "k8s.service.name": "api-gateway-svc",
+    
+    "service.name": "api-gateway",
+    "service.namespace": "test-apps",
+    "service.version": "v2.0.0-alpha",
+    
+    "host.name": "ip-10-0-2-156.us-east-1.compute.internal",
+    "host.address": "10.0.2.156",
+    
+    "cloud.provider": "aws",
+    "cloud.platform": "aws_eks",
+    "cloud.account.id": "999888777666",
+    "cloud.region": "us-east-1",
+    "cloud.availability_zone": "us-east-1b",
+    "aws.region": "us-east-1",
+    
+    "k8s.label.app": "api-gateway",
+    "k8s.label.version": "v2.0.0-alpha",
+    "k8s.label.linkerd.io/proxy-deployment": "api-gateway",
+    "k8s.label.environment": "staging"
+  },
+  {
+    "eventType": "Metric",
+    "metricName": "linkerd_response_latency_ms_p99",
+    "account": 999888,
+    "timestamp": 1713786900000,
+    "value": 156.78,
+    "otel.library.name": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver",
+    "instrumentation.provider": "opentelemetry",
+    "telemetry.sdk.name": "opentelemetry",
+    "telemetry.sdk.version": "1.20.0",
+    
+    "linkerd.proxy.name": "linkerd2-proxy",
+    "linkerd.proxy.version": "edge-23.5.1",
+    
+    "k8s.cluster.name": "dev-cluster",
+    "k8s.namespace.name": "microservices",
+    "k8s.deployment.name": "user-service",
+    "k8s.pod.name": "user-service-78c5d4b9f-q9r7t",
+    "k8s.node.name": "ip-10-0-3-89.us-east-1.compute.internal",
+    "k8s.service.name": "user-service",
+    
+    "service.name": "user-service",
+    "service.namespace": "microservices",
+    
+    "host.name": "ip-10-0-3-89.us-east-1.compute.internal",
+    "host.address": "10.0.3.89",
+    
+    "cloud.provider": "aws",
+    "cloud.platform": "aws_eks",
+    "cloud.region": "us-east-1",
+    
+    "k8s.label.app": "user-service",
+    "k8s.label.linkerd.io/control-plane-ns": "linkerd"
+  },
+  {
+    "eventType": "Metric",
+    "metricName": "kube_service_info",
+    "account": 999888,
+    "timestamp": 1713786900000,
+    "value": 1,
+    "instrumentation.provider": "opentelemetry",
+    "newrelic.source": "api.metrics.otlp",
+    
+    "k8s.cluster.name": "staging-cluster",
+    "k8s.namespace.name": "linkerd",
+    "k8s.service.name": "linkerd-destination",
+    "k8s.service.label.linkerd_io_proxy_deployment": "linkerd-destination",
+    "k8s.label.app.kubernetes.io/name": "destination",
+    "k8s.label.app.kubernetes.io/part-of": "Linkerd",
+    "k8s.label.linkerd.io/control-plane-component": "destination",
+    "k8s.label.environment": "staging"
+  },
+  {
+    "eventType": "Metric",
+    "metricName": "service_mesh_metric",
+    "account": 999888,
+    "timestamp": 1713786900000,
+    "value": 78,
+    "instrumentation.provider": "opentelemetry",
+    "messaging.system": "linkerd",
+    
+    "service.name": "payment-service",
+    "service.namespace": "microservices",
+    "service.version": "v1.5.0-rc1",
+    
+    "k8s.cluster.name": "dev-cluster",
+    "k8s.namespace.name": "microservices",
+    "k8s.pod.name": "payment-service-9b8c7d5f2-h4j6l",
+    "k8s.deployment.name": "payment-service",
+    
+    "otel.library.name": "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/linkerdreceiver",
+    "telemetry.sdk.name": "opentelemetry"
+  },
+  {
+    "eventType": "Log",
+    "message": "linkerd-proxy initialized successfully",
+    "account": 999888,
+    "timestamp": 1713786900000,
+    "newrelic.source": "api.logs.otlp",
+    "instrumentation.provider": "opentelemetry",
+    
+    "k8s.cluster.name": "staging-cluster",
+    "k8s.namespace.name": "test-apps",
+    "k8s.container.name": "linkerd-proxy",
+    "k8s.pod.name": "api-gateway-5f8d9c7b6-n2m8p",
+    
+    "service.name": "api-gateway",
+    "service.namespace": "test-apps",
+    
+    "host.name": "ip-10-0-2-156.us-east-1.compute.internal"
+  }
+]

@@ -36,12 +36,11 @@ Determine integration characteristics by referencing existing comprehensive patt
 **Service Context Analysis**:
 - **Domain**: Usually `INFRA` for infrastructure, `EXT` for external services
 - **Type**: Follow naming conventions (`NGINXSERVER`, `REDISINSTANCE`, `KAFKACLUSTER`, `POSTGRESQLINSTANCE`) 
-- **Multiple Receiver Rules**: Like Kafka's approach - different rules for:
-  - Native receiver (`[integration]receiver`)
+- **Multiple Receiver Rules**: Different OTel receiver rules for:
+  - Native OTel receiver (`[integration]receiver`)
   - Prometheus receiver (metrics via prometheus exporter)
-  - JMX receiver (for Java applications) 
-  - OHI integration (New Relic integration)
-  - Log collection rules (when applicable)
+  - OTel log collection rules (when applicable)
+  - Kubernetes metrics via OTel collectors
 
 **Deployment Context**:
 - **Kubernetes**: If deployable in k8s → include k8s.* attributes with TTL
@@ -72,13 +71,12 @@ Determine integration characteristics by referencing existing comprehensive patt
 - **Metric Patterns**: Understand prefixes, naming, and attribute inheritance
 - **Library Names**: Map all possible `otel.library.name` values:
   - Native: `github.com/open-telemetry/opentelemetry-collector-contrib/receiver/[name]receiver`
-  - Prometheus: `github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver` 
-  - JMX: `io.opentelemetry.contrib.jmxmetrics` or `io.opentelemetry.jmx`
+  - Prometheus: `github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver`
 
 ### 3. Generation Phase
 Create files following established patterns from existing definitions (Kafka, Redis, K8s):
 
-**Multiple Rule Examples** (Reference: Kafka, RabbitMQ, MSSQL patterns):
+**OpenTelemetry Rule Examples**:
 ```yaml
 synthesis:
   rules:
@@ -97,9 +95,9 @@ synthesis:
         - attribute: otel.library.name
           value: "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/[service]receiver"
       tags:
-        # All applicable attributes from comprehensive list above
+        # All applicable OTel attributes from comprehensive list above
 
-    # Prometheus receiver rule (when service has prometheus exporter)
+    # OTel Prometheus receiver rule (when service has prometheus exporter)
     - ruleName: infra_[service]_prometheus  
       identifier: [prometheus.identifier]
       name: [prometheus.identifier]
@@ -114,7 +112,7 @@ synthesis:
         - attribute: otel.library.name
           value: "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver"
 
-    # K8s metrics rule (kube-state-metrics pattern)
+    # OTel K8s metrics rule (kube-state-metrics via OTel)
     - ruleName: infra_[service]_k8s
       compositeIdentifier:
         separator: ":"
@@ -130,19 +128,10 @@ synthesis:
           present: true
         - attribute: newrelic.source
           value: 'api.metrics.otlp'
+        - attribute: instrumentation.provider
+          value: opentelemetry
 
-    # OHI integration rule (legacy New Relic integration)
-    - ruleName: infra_[service]_entityId
-      identifier: entityId
-      name: entityName
-      legacyFeatures:
-        useNonStandardAttributes: true
-        overrideGuidType: true
-      conditions:
-        - attribute: eventType
-          value: [Service]Sample
-
-    # Log collection rule  
+    # OTel Log collection rule  
     - ruleName: infra_[service]_logs
       identifier: [primary.attribute]
       name: [primary.attribute]
@@ -333,11 +322,9 @@ configuration:
   alertable: true
 
 dashboardTemplates:
-  # Always include both when OTel receiver exists
-  newRelic:
-    template: newrelic_dashboard.json  # OHI integration dashboard
+  # OpenTelemetry receiver dashboard
   opentelemetry:
-    template: opentelemetry_dashboard.json  # OTel receiver dashboard
+    template: opentelemetry_dashboard.json
   # Add prometheus if prometheus receiver supported
   prometheus:
     template: prometheus_dashboard.json
@@ -347,11 +334,11 @@ ownership:
     teamName: "OnHost Agent and Integrations"  # Default team
 ```
 
-**Test Files**: Generate comprehensive and realistic JSON with ALL attribute patterns:
-- Multiple receiver scenarios (native, prometheus, k8s, logs)
+**Test Files**: Generate comprehensive and realistic JSON with ALL OTel attribute patterns:
+- Multiple OTel receiver scenarios (native receiver, prometheus receiver, k8s, logs)
 - All deployment contexts (k8s, container, host, cloud)
-- Complete attribute coverage from the comprehensive patterns above
-- Realistic metric values and timestamps
+- Complete OTel attribute coverage from the comprehensive patterns above
+- Realistic metric values and timestamps with OTel telemetry attributes
 - Multiple entities per test file when applicable
 
 ### 4. Implementation Phase
@@ -360,12 +347,20 @@ ownership:
   - `definition.yml` and `definition.stg.yml` (with multiple receiver rules and comprehensive patterns)
   - `tests/Metric.json` and `tests/Metric.stg.json` (with realistic sample data)
 - Follow established patterns for file structure and naming
+- **Validate definitions**: Run validation to ensure correctness:
+  - Execute `docker compose run validate-definitions` to validate schema and uniqueness
+  - If dashboard templates are included, run `docker compose run sanitize-dashboards` to fix dashboard issues
+  - Address any validation errors before proceeding
 - Create pull request with descriptive title and comprehensive body
 
 ## Constraints
 - DO NOT create definitions for integrations that already exist
 - DO NOT guess or hardcode attributes - reference existing comprehensive patterns
 - ALWAYS analyze ALL similar existing entity definitions (Kafka, Redis, RabbitMQ, NGINX, PostgreSQL, MSSQL, container, k8s) for complete patterns
+- MUST validate all generated definitions using the validation tools:
+  - `docker compose run validate-definitions` for schema and uniqueness validation
+  - `docker compose run sanitize-dashboards` for dashboard validation if needed
+  - Fix all validation errors before proceeding to PR creation
 - MUST include ALL applicable attribute categories:
   - K8s attributes with TTL when service can run in Kubernetes  
   - Cloud provider attributes when applicable (AWS, Azure, GCP)
@@ -378,9 +373,10 @@ ownership:
 - MUST include prefixed tags for dynamic labels (label., tags., k8s.label.)
 - ONLY use confirmed OTel receiver attributes and semantic conventions  
 - ALWAYS follow the established comprehensive naming patterns in the codebase
-- MUST create multiple rules for different receiver types when applicable (native, prometheus, jmx, logs, OHI)
+- MUST create multiple rules for different OTel receiver types when applicable (native, prometheus, logs)
 - MUST include TTL configurations where appropriate (especially k8s and dynamic attributes)
-- DO NOT hardcode values - make them dynamic based on comprehensive integration research
+- FOCUS ONLY on OpenTelemetry receiver patterns, NOT legacy New Relic OHI integrations
+- DO NOT hardcode values - make them dynamic based on comprehensive OTel integration research
 
 ## Research Sources Priority
 1. **Existing Entity Definitions** (PRIMARY): Study ALL comparable patterns
@@ -392,14 +388,14 @@ ownership:
 3. **OpenTelemetry Semantic Conventions**
 4. **Receiver-specific documentation on GitHub**
 5. **Integration-specific documentation and metric samples**
-6. **New Relic OHI (On-Host Integration) documentation** for legacy patterns
 
 ## Output Format
 When complete, provide:
 1. Summary of entity definition files created
 2. Branch name
-3. Pull request URL (if created)
-4. Key attributes and synthesis rules identified
-5. Any limitations or assumptions made
+3. Validation results (pass/fail with any errors addressed)
+4. Pull request URL (if created)
+5. Key attributes and synthesis rules identified
+6. Any limitations or assumptions made
 
 Start by asking which OTel integration you want to create an entity definition for, then begin by examining existing similar entity definitions to understand patterns before researching the specific receiver.
